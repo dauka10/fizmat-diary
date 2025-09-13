@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FizmatDiary - Personal Diary Application</title>
+    <meta name="description" content="A modern, accessible diary application for documenting your Fizmat journey and personal thoughts">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <div class="app">
+        <!-- Authentication Screen -->
+        <div class="auth-container" id="authContainer">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="fas fa-book-open" aria-hidden="true"></i>
+                        <h1>FizmatDiary</h1>
+                    </div>
+                    <p class="auth-subtitle">Track and manage your homework assignments</p>
+                </div>
+                
+                <!-- Sign In Form -->
+                <div class="auth-form" id="signInForm">
+                    <h2>Welcome Back</h2>
+                    <form id="signInFormElement">
+                        <div class="form-group">
+                            <label for="signInEmail">Email Address</label>
+                            <input type="email" id="signInEmail" required aria-describedby="signInEmailHelp">
+                            <div id="signInEmailHelp" class="form-help">Enter your registered email address</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signInPassword">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="signInPassword" required aria-describedby="signInPasswordHelp">
+                                <button type="button" class="password-toggle" id="signInPasswordToggle" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div id="signInPasswordHelp" class="form-help">Enter your password</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                            Sign In
+                        </button>
+                    </form>
+                    <div class="auth-switch">
+                        <p>Don't have an account? <button type="button" class="link-btn" id="showSignUp">Sign Up</button></p>
+                        <div class="admin-bypass">
+                            <button type="button" class="btn btn-outline btn-full" id="adminBypassBtn">
+                                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                                Admin Access
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sign Up Form -->
+                <div class="auth-form" id="signUpForm" style="display: none;">
+                    <h2>Create Account</h2>
+                    <form id="signUpFormElement">
+                        <div class="form-group">
+                            <label for="signUpName">Full Name</label>
+                            <input type="text" id="signUpName" required aria-describedby="signUpNameHelp">
+                            <div id="signUpNameHelp" class="form-help">Enter your full name</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signUpEmail">Email Address</label>
+                            <input type="email" id="signUpEmail" required aria-describedby="signUpEmailHelp">
+                            <div id="signUpEmailHelp" class="form-help">Enter a valid email address</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signUpPassword">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="signUpPassword" required aria-describedby="signUpPasswordHelp">
+                                <button type="button" class="password-toggle" id="signUpPasswordToggle" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div id="signUpPasswordHelp" class="form-help">Password must be at least 8 characters</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signUpConfirmPassword">Confirm Password</label>
+                            <div class="password-input">
+                                <input type="password" id="signUpConfirmPassword" required aria-describedby="signUpConfirmPasswordHelp">
+                                <button type="button" class="password-toggle" id="signUpConfirmPasswordToggle" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div id="signUpConfirmPasswordHelp" class="form-help">Re-enter your password</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole">Role</label>
+                            <select id="userRole" required aria-describedby="userRoleHelp">
+                                <option value="">Select your role</option>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                            </select>
+                            <div id="userRoleHelp" class="form-help">Choose your role in the system</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-user-plus" aria-hidden="true"></i>
+                            Create Account
+                        </button>
+                    </form>
+                    <div class="auth-switch">
+                        <p>Already have an account? <button type="button" class="link-btn" id="showSignIn">Sign In</button></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Application -->
+        <div class="main-app" id="mainApp" style="display: none;">
+            <!-- Header -->
+            <header class="header" role="banner">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-book-open" aria-hidden="true"></i>
+                        <h1>FizmatDiary</h1>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="addHomeworkBtn" aria-label="Add new homework assignment">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            Add Homework
+                        </button>
+                        <div class="user-menu">
+                            <button class="btn btn-outline" id="userMenuBtn" aria-label="User menu">
+                                <i class="fas fa-user" aria-hidden="true"></i>
+                                <span id="userName">User</span>
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="user-dropdown" id="userDropdown">
+                                <div class="user-info">
+                                    <div class="user-name" id="userDisplayName">User Name</div>
+                                    <div class="user-email" id="userEmail">user@example.com</div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item" id="logoutBtn">
+                                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+        <!-- Main Content -->
+        <main class="main" id="main-content" role="main">
+            <!-- Sidebar -->
+            <aside class="sidebar" role="complementary" aria-label="Homework assignments navigation">
+                <div class="sidebar-header">
+                    <h2>Homework</h2>
+                    <div class="homework-count" id="homeworkCount" aria-live="polite">0 assignments</div>
+                </div>
+                <div class="search-box">
+                    <label for="searchInput" class="sr-only">Search homework assignments</label>
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <input type="text" id="searchInput" placeholder="Search homework..." aria-describedby="search-help">
+                    <div id="search-help" class="sr-only">Type to search through your homework assignments by title or content</div>
+                </div>
+
+                <div class="classes-grid">
+                    <h3>10th Grade Classes</h3>
+                    <div class="classes-container">
+                        <div class="class-row">
+                            <div class="class-item" data-class="10A" tabindex="0" role="button" aria-label="Select class 10A">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10A</span>
+                                <span class="class-count" id="class-10A-count">0</span>
+                            </div>
+                            <div class="class-item" data-class="10B" tabindex="0" role="button" aria-label="Select class 10B">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10B</span>
+                                <span class="class-count" id="class-10B-count">0</span>
+                            </div>
+                            <div class="class-item" data-class="10C" tabindex="0" role="button" aria-label="Select class 10C">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10C</span>
+                                <span class="class-count" id="class-10C-count">0</span>
+                            </div>
+                            <div class="class-item" data-class="10G" tabindex="0" role="button" aria-label="Select class 10G">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10G</span>
+                                <span class="class-count" id="class-10G-count">0</span>
+                            </div>
+                            <div class="class-item" data-class="10H" tabindex="0" role="button" aria-label="Select class 10H">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10H</span>
+                                <span class="class-count" id="class-10H-count">0</span>
+                            </div>
+                        </div>
+                        <div class="class-row">
+                            <div class="class-item" data-class="10D" tabindex="0" role="button" aria-label="Select class 10D">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10D</span>
+                                <span class="class-count" id="class-10D-count">0</span>
+                            </div>
+                            <div class="class-item" data-class="10E" tabindex="0" role="button" aria-label="Select class 10E">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10E</span>
+                                <span class="class-count" id="class-10E-count">0</span>
+                            </div>
+                            <div class="class-item" data-class="10F" tabindex="0" role="button" aria-label="Select class 10F">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10F</span>
+                                <span class="class-count" id="class-10F-count">0</span>
+                            </div>
+                            <div class="class-item" data-class="10K" tabindex="0" role="button" aria-label="Select class 10K">
+                                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+                                <span>10K</span>
+                                <span class="class-count" id="class-10K-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="homework-list" id="homeworkList" role="list" aria-label="List of homework assignments">
+                    <!-- Homework assignments will be dynamically added here -->
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <section class="content" role="region" aria-label="Homework assignment editor">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-content">
+                        <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                        <h2>Welcome to FizmatDiary</h2>
+                        <p>Start tracking your homework assignments by adding your first assignment.</p>
+                        <button class="btn btn-primary" id="welcomeAddBtn" aria-label="Add your first homework assignment">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            Add First Assignment
+                        </button>
+                    </div>
+                </div>
+
+                <div class="subjects-grid" id="subjectsGrid" style="display: none;">
+                    <div class="subjects-header">
+                        <h2>Subjects for <span id="selectedClass">10H</span></h2>
+                        <p>Click on any subject to filter homework assignments</p>
+                    </div>
+                    <div class="subjects-container">
+                        <div class="subject-item" data-subject="AP CS" tabindex="0" role="button" aria-label="Select subject AP CS">
+                            <i class="fas fa-laptop-code" aria-hidden="true"></i>
+                            <span>AP CS</span>
+                        </div>
+                        <div class="subject-item" data-subject="AP Physics" tabindex="0" role="button" aria-label="Select subject AP Physics">
+                            <i class="fas fa-atom" aria-hidden="true"></i>
+                            <span>AP Physics</span>
+                        </div>
+                        <div class="subject-item" data-subject="AP Calculus" tabindex="0" role="button" aria-label="Select subject AP Calculus">
+                            <i class="fas fa-calculator" aria-hidden="true"></i>
+                            <span>AP Calculus</span>
+                        </div>
+                        <div class="subject-item" data-subject="AP English" tabindex="0" role="button" aria-label="Select subject AP English">
+                            <i class="fas fa-book" aria-hidden="true"></i>
+                            <span>AP English</span>
+                        </div>
+                        <div class="subject-item" data-subject="Geography" tabindex="0" role="button" aria-label="Select subject Geography">
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                            <span>Geography</span>
+                        </div>
+                        <div class="subject-item" data-subject="Basic Military" tabindex="0" role="button" aria-label="Select subject Basic Military">
+                            <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                            <span>Basic Military</span>
+                        </div>
+                        <div class="subject-item" data-subject="Biology" tabindex="0" role="button" aria-label="Select subject Biology">
+                            <i class="fas fa-dna" aria-hidden="true"></i>
+                            <span>Biology</span>
+                        </div>
+                        <div class="subject-item" data-subject="Class Hour" tabindex="0" role="button" aria-label="Select subject Class Hour">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
+                            <span>Class Hour</span>
+                        </div>
+                        <div class="subject-item" data-subject="Geometry" tabindex="0" role="button" aria-label="Select subject Geometry">
+                            <i class="fas fa-shapes" aria-hidden="true"></i>
+                            <span>Geometry</span>
+                        </div>
+                        <div class="subject-item" data-subject="KZ History" tabindex="0" role="button" aria-label="Select subject KZ History">
+                            <i class="fas fa-landmark" aria-hidden="true"></i>
+                            <span>KZ History</span>
+                        </div>
+                        <div class="subject-item" data-subject="Russian Language" tabindex="0" role="button" aria-label="Select subject Russian Language">
+                            <i class="fas fa-language" aria-hidden="true"></i>
+                            <span>Russian Language</span>
+                        </div>
+                        <div class="subject-item" data-subject="KZ Literature" tabindex="0" role="button" aria-label="Select subject KZ Literature">
+                            <i class="fas fa-scroll" aria-hidden="true"></i>
+                            <span>KZ Literature</span>
+                        </div>
+                        <div class="subject-item" data-subject="PE" tabindex="0" role="button" aria-label="Select subject PE">
+                            <i class="fas fa-running" aria-hidden="true"></i>
+                            <span>PE</span>
+                        </div>
+                        <div class="subject-item" data-subject="World History" tabindex="0" role="button" aria-label="Select subject World History">
+                            <i class="fas fa-globe-americas" aria-hidden="true"></i>
+                            <span>World History</span>
+                        </div>
+                        <div class="subject-item" data-subject="Chemistry" tabindex="0" role="button" aria-label="Select subject Chemistry">
+                            <i class="fas fa-flask" aria-hidden="true"></i>
+                            <span>Chemistry</span>
+                        </div>
+                        <div class="subject-item" data-subject="KZ Language" tabindex="0" role="button" aria-label="Select subject KZ Language">
+                            <i class="fas fa-comments" aria-hidden="true"></i>
+                            <span>KZ Language</span>
+                        </div>
+                        <div class="subject-item" data-subject="Laws" tabindex="0" role="button" aria-label="Select subject Laws">
+                            <i class="fas fa-gavel" aria-hidden="true"></i>
+                            <span>Laws</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="homework-editor" id="homeworkEditor" role="form" aria-label="Homework assignment editor">
+                    <div class="editor-header">
+                        <div class="homework-category-selector">
+                            <label for="homeworkCategory" class="sr-only">Homework category</label>
+                            <select id="homeworkCategory" class="category-select">
+                                <option value="10A">10A</option>
+                                <option value="10B">10B</option>
+                                <option value="10C">10C</option>
+                                <option value="10D">10D</option>
+                                <option value="10E">10E</option>
+                                <option value="10F">10F</option>
+                                <option value="10G">10G</option>
+                                <option value="10H">10H</option>
+                                <option value="10K">10K</option>
+                            </select>
+                        </div>
+                        <div class="homework-subject-selector">
+                            <label for="homeworkSubject" class="sr-only">Homework subject</label>
+                            <select id="homeworkSubject" class="category-select">
+                                <option value="">Select Subject</option>
+                                <option value="AP CS">AP CS</option>
+                                <option value="AP Physics">AP Physics</option>
+                                <option value="AP Calculus">AP Calculus</option>
+                                <option value="AP English">AP English</option>
+                                <option value="Geography">Geography</option>
+                                <option value="Basic Military">Basic Military</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Class Hour">Class Hour</option>
+                                <option value="Geometry">Geometry</option>
+                                <option value="KZ History">KZ History</option>
+                                <option value="Russian Language">Russian Language</option>
+                                <option value="KZ Literature">KZ Literature</option>
+                                <option value="PE">PE</option>
+                                <option value="World History">World History</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="KZ Language">KZ Language</option>
+                                <option value="Laws">Laws</option>
+                            </select>
+                        </div>
+                        <label for="homeworkTitle" class="sr-only">Homework title</label>
+                        <input type="text" id="homeworkTitle" placeholder="Homework title..." class="title-input" aria-label="Homework assignment title">
+                        <div class="editor-actions">
+                            <button class="btn btn-secondary" id="saveBtn" aria-label="Save homework assignment">
+                                <i class="fas fa-save" aria-hidden="true"></i>
+                                Save
+                            </button>
+                            <button class="btn btn-outline" id="cancelBtn" aria-label="Cancel editing and discard changes">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="editor-content">
+                        <label for="homeworkContent" class="sr-only">Homework assignment content</label>
+                        <textarea id="homeworkContent" placeholder="Write your homework assignment details here..." aria-label="Homework assignment content" aria-describedby="wordCount"></textarea>
+                    </div>
+                    <div class="editor-footer">
+                        <div class="homework-dates">
+                            <div class="date-field">
+                                <label for="homeworkGivenDate" class="date-label">Given Date</label>
+                                <input type="date" id="homeworkGivenDate" class="date-input" aria-label="Homework given date">
+                            </div>
+                            <div class="date-field">
+                                <label for="homeworkDueDate" class="date-label">Due Date</label>
+                                <input type="date" id="homeworkDueDate" class="date-input" aria-label="Homework due date">
+                            </div>
+                        </div>
+                        <div class="homework-meta">
+                            <span id="homeworkDate" aria-label="Assignment creation date"></span>
+                            <span id="wordCount" aria-live="polite">0 words</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Window -->
+                <div class="subject-window" id="subjectWindow" style="display: none;">
+                    <div class="subject-window-header">
+                        <button class="btn btn-outline back-btn" id="backToSubjectsBtn" aria-label="Back to subjects">
+                            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                            Back to Subjects
+                        </button>
+                        <div class="subject-window-title">
+                            <h2 id="subjectWindowTitle">Subject Name</h2>
+                            <p id="subjectWindowClass">Class: 10H</p>
+                        </div>
+                        <button class="btn btn-primary" id="addSubjectHomeworkBtn" aria-label="Add homework for this subject">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            Add Homework
+                        </button>
+                    </div>
+                    
+                    <div class="subject-homework-list" id="subjectHomeworkList">
+                        <!-- Subject-specific homework will be displayed here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for confirmation dialogs -->
+    <div class="modal" id="confirmModal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalMessage" aria-modal="true">
+        <div class="modal-content">
+            <h3 id="modalTitle">Confirm Action</h3>
+            <p id="modalMessage">Are you sure you want to perform this action?</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="modalCancel" aria-label="Cancel action">Cancel</button>
+                <button class="btn btn-danger" id="modalConfirm" aria-label="Confirm action">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live region for screen reader announcements -->
+    <div id="liveRegion" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel" style="display: none;">
+        <div class="admin-header">
+            <div class="admin-title">
+                <h1><i class="fas fa-shield-alt" aria-hidden="true"></i> Admin Panel</h1>
+                <p>Manage users and monitor application</p>
+            </div>
+            <div class="admin-actions">
+                <button class="btn btn-outline" id="refreshDataBtn">
+                    <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                    Refresh
+                </button>
+                <button class="btn btn-outline" id="viewRegistrationBtn">
+                    <i class="fas fa-user-plus" aria-hidden="true"></i>
+                    View Registration
+                </button>
+                <button class="btn btn-outline" id="exportUsersBtn">
+                    <i class="fas fa-download" aria-hidden="true"></i>
+                    Export Users
+                </button>
+                <button class="btn btn-secondary" id="backToAppBtn">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Back to App
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <!-- Analytics Dashboard -->
+            <div class="admin-section">
+                <h2>Analytics Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="totalEntries">0</div>
+                            <div class="stat-label">Total Homework</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="todayEntries">0</div>
+                            <div class="stat-label">Today's Homework</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="activeUsers">0</div>
+                            <div class="stat-label">Active Users</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2>User Management</h2>
+                    <div class="search-controls">
+                        <input type="text" id="userSearch" placeholder="Search users..." class="search-input">
+                        <button class="btn btn-outline" id="exportUsersBtn">
+                            <i class="fas fa-download" aria-hidden="true"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="users-table-container">
+                    <table class="users-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Homework</th>
+                                <th>Joined</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Information -->
+            <div class="admin-section">
+                <h2>System Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Application Version:</label>
+                        <span>1.0.0</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Total Storage Used:</label>
+                        <span id="storageUsed">0 KB</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Last Backup:</label>
+                        <span id="lastBackup">Never</span>
+                    </div>
+                    <div class="info-item">
+                        <label>System Status:</label>
+                        <span class="status-good">Online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accessibility controls -->
+    <div class="accessibility-controls" role="region" aria-label="Accessibility options">
+        <button id="highContrastToggle" class="btn btn-outline" aria-label="Toggle high contrast mode">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            High Contrast
+        </button>
+        <button id="motionToggle" class="btn btn-outline" aria-label="Toggle reduced motion">
+            <i class="fas fa-pause" aria-hidden="true"></i>
+            Reduce Motion
+        </button>
+        <button id="adminToggle" class="btn btn-outline" aria-label="Toggle admin panel">
+            <i class="fas fa-cog" aria-hidden="true"></i>
+            Admin
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "fizmat-diary",
+  "version": "1.0.0",
+  "description": "A modern diary application for Fizmat students",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server ."
+  },
+  "keywords": ["diary", "fizmat", "journal", "notes"],
+  "author": "FizmatDiary",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1"
+  }
+}
