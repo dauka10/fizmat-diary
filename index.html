@@ -51,12 +51,6 @@
                     </form>
                     <div class="auth-switch">
                         <p>Don't have an account? <button type="button" class="link-btn" id="showSignUp">Sign Up</button></p>
-                        <div class="admin-bypass">
-                            <button type="button" class="btn btn-outline btn-full" id="adminBypassBtn">
-                                <i class="fas fa-shield-alt" aria-hidden="true"></i>
-                                Admin Access
-                            </button>
-                        </div>
                     </div>
                 </div>
                 
@@ -123,12 +117,9 @@
                     <div class="logo">
                         <i class="fas fa-book-open" aria-hidden="true"></i>
                         <h1>FizmatDiary</h1>
+                        <h1>√daulet</h1>
                     </div>
                     <div class="header-actions">
-                        <button class="btn btn-primary" id="addHomeworkBtn" aria-label="Add new homework assignment">
-                            <i class="fas fa-plus" aria-hidden="true"></i>
-                            Add Homework
-                        </button>
                         <div class="user-menu">
                             <button class="btn btn-outline" id="userMenuBtn" aria-label="User menu">
                                 <i class="fas fa-user" aria-hidden="true"></i>
@@ -225,6 +216,17 @@
                 <div class="homework-list" id="homeworkList" role="list" aria-label="List of homework assignments">
                     <!-- Homework assignments will be dynamically added here -->
                 </div>
+
+                <!-- Votes (below homework and classes) -->
+                <div class="votes-sidebar" id="votesSidebar" aria-label="Votes" style="margin-top: 1rem;">
+                    <div class="votes-header">
+                        <h2>Votes</h2>
+                        <div class="votes-count" id="votesCount" aria-live="polite">0 votes</div>
+                    </div>
+                    <div class="votes-list" id="votesList" role="list" aria-label="List of votes">
+                        <!-- Votes will be dynamically added here -->
+                    </div>
+                </div>
             </aside>
 
             <!-- Content Area -->
@@ -241,9 +243,33 @@
                     </div>
                 </div>
 
+                <!-- Polls Window for Students -->
+                <div id="pollsWindow" class="polls-window" style="display: none;">
+                    <div class="polls-header">
+                        <h3>Recent Polls</h3>
+                        <div class="polls-actions">
+                            <button id="seeVotesBtn" class="btn btn-outline btn-sm" style="display: none;">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                See Votes
+                            </button>
+                        </div>
+                    </div>
+                    <div id="pollsList" class="polls-list">
+                        <!-- Polls will be rendered here -->
+                    </div>
+                </div>
+
+                
+
                 <div class="subjects-grid" id="subjectsGrid" style="display: none;">
                     <div class="subjects-header">
                         <h2>Subjects for <span id="selectedClass">10H</span></h2>
+                        <div>
+                            <button class="btn btn-outline back-btn" id="backToWelcomeBtn" aria-label="Back to welcome">
+                                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                                Back
+                            </button>
+                        </div>
                         <p>Click on any subject to filter homework assignments</p>
                     </div>
                     <div class="subjects-container">
@@ -318,7 +344,7 @@
                     </div>
                 </div>
 
-                <div class="homework-editor" id="homeworkEditor" role="form" aria-label="Homework assignment editor">
+                <div class="homework-editor" id="homeworkEditor" aria-label="Homework assignment editor">
                     <div class="editor-header">
                         <div class="homework-category-selector">
                             <label for="homeworkCategory" class="sr-only">Homework category</label>
@@ -358,21 +384,34 @@
                             </select>
                         </div>
                         <label for="homeworkTitle" class="sr-only">Homework title</label>
-                        <input type="text" id="homeworkTitle" placeholder="Homework title..." class="title-input" aria-label="Homework assignment title">
+                        <input type="text" id="homeworkTitle" placeholder="   Homework title..." class="title-input" aria-label="Homework assignment title">
                         <div class="editor-actions">
                             <button class="btn btn-secondary" id="saveBtn" aria-label="Save homework assignment">
                                 <i class="fas fa-save" aria-hidden="true"></i>
                                 Save
                             </button>
-                            <button class="btn btn-outline" id="cancelBtn" aria-label="Cancel editing and discard changes">
-                                <i class="fas fa-times" aria-hidden="true"></i>
-                                Cancel
+                            <button class="btn btn-outline" id="cancelBtn" aria-label="Back to welcome screen">
+                                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                                Back
                             </button>
                         </div>
                     </div>
                     <div class="editor-content">
                         <label for="homeworkContent" class="sr-only">Homework assignment content</label>
                         <textarea id="homeworkContent" placeholder="Write your homework assignment details here..." aria-label="Homework assignment content" aria-describedby="wordCount"></textarea>
+                        
+                        <!-- File Upload Section -->
+                        <div class="file-upload-section" id="fileUploadSection">
+                            <label for="homeworkFiles" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                                <span>Upload Files or Photos</span>
+                                <small>Click to select files or drag and drop</small>
+                            </label>
+                            <input type="file" id="homeworkFiles" multiple accept="image/*,.pdf,.doc,.docx,.txt,.zip" style="display: none;">
+                            <div class="file-preview-container" id="filePreviewContainer">
+                                <!-- Uploaded files will be displayed here -->
+                            </div>
+                        </div>
                     </div>
                     <div class="editor-footer">
                         <div class="homework-dates">
@@ -388,6 +427,70 @@
                         <div class="homework-meta">
                             <span id="homeworkDate" aria-label="Assignment creation date"></span>
                             <span id="wordCount" aria-live="polite">0 words</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Votes welcome card (teacher) -->
+                <div class="votes-welcome" id="votesWelcome" style="display: none;">
+                    <div class="welcome-content">
+                        <i class="fas fa-poll" aria-hidden="true"></i>
+                        <h2>Create a Class Poll</h2>
+                        <p>Gather input from students by creating your first voting poll.</p>
+                        <div class="welcome-actions">
+                            <button class="btn btn-primary" id="startPollBtn" aria-label="Add your poll">
+                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                Add your poll
+                            </button>
+                            <button class="btn btn-outline" id="seeVotesBtn" aria-label="See votes">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                See Votes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Votes editor (right pane similar to homework editor) -->
+                <div class="votes-editor" id="votesEditor" aria-label="Create or edit vote" style="margin-top: 1rem;">
+                    <div class="editor-header">
+                        <label for="voteTopic" class="sr-only">Vote topic</label>
+                        <input type="text" id="voteTopic" placeholder="   Topic..." class="title-input" aria-label="Vote topic">
+                        <div class="editor-actions">
+                            <button class="btn btn-primary" id="addIdeaBtn" aria-label="Start a new vote">
+                                <i class="fas fa-plus" aria-hidden="true"></i>
+                                Add your idea
+                            </button>
+                            <button class="btn btn-outline" id="cancelVoteBtn" aria-label="Cancel creating vote">
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="editor-content">
+                        <div class="choices-controls">
+                            <label class="sr-only" for="newChoiceInput">Add choice</label>
+                            <div style="display:flex; gap: .5rem; align-items:center;">
+                                <input type="text" id="newChoiceInput" placeholder="Choice text..." class="title-input" aria-label="New choice">
+                                <button class="btn btn-outline" id="addChoiceBtn" aria-label="Add choice">
+                                    <i class="fas fa-plus" aria-hidden="true"></i>
+                                    Add Choice
+                                </button>
+                            </div>
+                        </div>
+                        <ul id="choicesList" class="choices-list" aria-label="Choices list">
+                            <!-- Dynamic choices appear here -->
+                        </ul>
+                    </div>
+                    <div class="editor-footer">
+                        <div class="homework-dates">
+                            <div class="date-field">
+                                <label for="voteGivenDate" class="date-label">Given Date</label>
+                                <input type="date" id="voteGivenDate" class="date-input" aria-label="Vote given date">
+                            </div>
+                            <div class="date-field">
+                                <label for="voteDueDate" class="date-label">Due Date</label>
+                                <input type="date" id="voteDueDate" class="date-input" aria-label="Vote due date">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -417,6 +520,26 @@
         </main>
     </div>
 
+    <!-- Admin Login Modal -->
+    <div class="modal" id="adminLoginModal" role="dialog" aria-labelledby="adminLoginTitle" aria-modal="true">
+        <div class="modal-content">
+            <h3 id="adminLoginTitle">Admin Access Required</h3>
+            <p>Please enter the admin password to access the admin panel:</p>
+            <div class="form-group">
+                <label for="adminPassword" class="sr-only">Admin Password</label>
+                <input type="password" id="adminPassword" class="form-input" placeholder="Enter admin password" aria-label="Admin password">
+                <div class="password-toggle" id="adminPasswordToggle" aria-label="Toggle password visibility">
+                    <i class="fas fa-eye" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div id="adminLoginError" class="error-message" style="display: none;"></div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="adminLoginCancel" aria-label="Cancel admin login">Cancel</button>
+                <button class="btn btn-primary" id="adminLoginConfirm" aria-label="Access admin panel">Access Admin Panel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for confirmation dialogs -->
     <div class="modal" id="confirmModal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalMessage" aria-modal="true">
         <div class="modal-content">
@@ -431,13 +554,28 @@
 
     <!-- Live region for screen reader announcements -->
     <div id="liveRegion" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+    
+    <!-- Secret Admin Access (Hidden) -->
+    <div id="secretAdminAccess" class="secret-access" style="display: none;">
+        <div class="secret-access-content">
+            <h3>Secret Admin Access</h3>
+            <p>Enter the secret password to access admin panel:</p>
+            <input type="password" id="secretPassword" placeholder="Secret password" class="secret-input">
+            <div class="secret-actions">
+                <button id="secretAccessBtn" class="btn btn-primary">Access Admin</button>
+                <button id="secretCancelBtn" class="btn btn-outline">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Admin Panel -->
     <div class="admin-panel" id="adminPanel" style="display: none;">
         <div class="admin-header">
             <div class="admin-title">
-                <h1><i class="fas fa-shield-alt" aria-hidden="true"></i> Admin Panel</h1>
-                <p>Manage users and monitor application</p>
+                <div class="admin-title-text">
+                    <h1><i class="fas fa-shield-alt" aria-hidden="true"></i> Admin Panel</h1>
+                    <p>Manage users and monitor application</p>
+                </div>
             </div>
             <div class="admin-actions">
                 <button class="btn btn-outline" id="refreshDataBtn">
@@ -536,6 +674,7 @@
                 </div>
             </div>
 
+
             <!-- System Information -->
             <div class="admin-section">
                 <h2>System Information</h2>
@@ -561,21 +700,15 @@
         </div>
     </div>
 
-    <!-- Accessibility controls -->
-    <div class="accessibility-controls" role="region" aria-label="Accessibility options">
-        <button id="highContrastToggle" class="btn btn-outline" aria-label="Toggle high contrast mode">
-            <i class="fas fa-adjust" aria-hidden="true"></i>
-            High Contrast
-        </button>
-        <button id="motionToggle" class="btn btn-outline" aria-label="Toggle reduced motion">
-            <i class="fas fa-pause" aria-hidden="true"></i>
-            Reduce Motion
-        </button>
-        <button id="adminToggle" class="btn btn-outline" aria-label="Toggle admin panel">
-            <i class="fas fa-cog" aria-hidden="true"></i>
-            Admin
+    <!-- Theme controls -->
+    <div class="accessibility-controls" role="region" aria-label="Theme options">
+        <button id="themeToggle" class="btn btn-outline" aria-label="Toggle dark mode">
+            <i class="fas fa-moon" aria-hidden="true"></i>
+            Dark Mode
         </button>
     </div>
+
+    
 
     <script src="script.js"></script>
 </body>
