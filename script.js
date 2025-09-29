@@ -10,10 +10,10 @@ class FizmatDiary {
         this.currentCategory = '10H';
         this.adminPassword = '551373'; // Secret admin password
         this.isAdminLoggedIn = false;
-        // Votes state
-        this.votes = [];
-        this.currentVoteId = null;
-        this.currentVoteChoices = [];
+        // Votes state - HIDDEN
+        // this.votes = [];
+        // this.currentVoteId = null;
+        // this.currentVoteChoices = [];
         
         this.initializeElements();
         this.bindEvents();
@@ -27,7 +27,8 @@ class FizmatDiary {
         }
     }
 
-    // Votes helpers (class-scoped storage)
+    // Votes helpers (class-scoped storage) - HIDDEN
+    /*
     getClassVotesKey(category) {
         const cat = category || this.currentCategory || '10H';
         return `fizmat-diary-votes-class-${cat}`;
@@ -53,8 +54,10 @@ class FizmatDiary {
             this.showNotification('Error saving votes. Please try again.', 'warning');
         }
     }
+    */
 
-    // Votes UI Logic
+    // Votes UI Logic - HIDDEN
+    /*
     startNewVote() {
         if (!this.currentUser || this.currentUser.role !== 'teacher') {
             this.showNotification('Only teachers can create votes.', 'warning');
@@ -265,6 +268,7 @@ class FizmatDiary {
             }
         );
     }
+    */
 
     initializeElements() {
         // Main elements
@@ -326,7 +330,7 @@ class FizmatDiary {
         
         // Accessibility / Theme elements
         this.liveRegion = document.getElementById('liveRegion');
-        this.themeToggle = document.getElementById('themeToggle');
+        // this.themeToggle = document.getElementById('themeToggle'); // REMOVED - Dark mode button not working
         
         // Admin panel elements
         this.adminPanel = document.getElementById('adminPanel');
@@ -359,7 +363,8 @@ class FizmatDiary {
         this.userDisplayName = document.getElementById('userDisplayName');
         this.userEmail = document.getElementById('userEmail');
 
-        // Votes elements
+        // Votes elements - HIDDEN
+        /*
         this.votesSidebar = document.getElementById('votesSidebar');
         this.votesList = document.getElementById('votesList');
         this.votesCount = document.getElementById('votesCount');
@@ -380,6 +385,7 @@ class FizmatDiary {
         this.pollsWindow = document.getElementById('pollsWindow');
         this.pollsList = document.getElementById('pollsList');
         this.seeVotesBtn = document.getElementById('seeVotesBtn');
+        */
     }
 
     bindEvents() {
@@ -475,6 +481,23 @@ class FizmatDiary {
         }, true); // Use capture phase to handle before other listeners
         
         // Ensure Enter and Space keys work in other input fields
+        [this.homeworkSubject, this.homeworkGivenDate, this.homeworkDueDate].forEach(input => {
+            if (input) {
+                input.addEventListener('keydown', (e) => {
+                    // Allow Enter and Space keys to work normally in input
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        // Stop propagation to prevent other handlers from interfering
+                        e.stopPropagation();
+                        // Don't prevent default - let these keys work normally
+                        return;
+                    }
+                }, true); // Use capture phase to handle before other listeners
+            }
+        });
+
+        // Vote-related input fields - HIDDEN
+        /*
+        // Ensure Enter and Space keys work in other input fields
         [this.homeworkSubject, this.homeworkGivenDate, this.homeworkDueDate, this.voteGivenDate, this.voteDueDate, this.newChoiceInput].forEach(input => {
             if (input) {
                 input.addEventListener('keydown', (e) => {
@@ -498,9 +521,10 @@ class FizmatDiary {
                 }
             }, true);
         }
+        */
         
-        // Theme control
-        if (this.themeToggle) this.themeToggle.addEventListener('click', () => this.toggleTheme());
+        // Theme control - REMOVED (Dark mode button not working properly)
+        // if (this.themeToggle) this.themeToggle.addEventListener('click', () => this.toggleTheme());
         
         // Modal accessibility
         this.confirmModal.addEventListener('keydown', (e) => this.handleModalKeyboard(e));
@@ -533,7 +557,8 @@ class FizmatDiary {
         // Edit and Delete button event listeners
         this.bindEditDeleteButtons();
         
-        // Votes events
+        // Votes events - HIDDEN
+        /*
         if (this.addIdeaBtn) this.addIdeaBtn.addEventListener('click', () => this.startNewVote());
         if (this.saveVoteBtn) this.saveVoteBtn.addEventListener('click', () => this.saveVote());
         if (this.cancelVoteBtn) this.cancelVoteBtn.addEventListener('click', () => this.cancelVote());
@@ -546,9 +571,12 @@ class FizmatDiary {
 
         // See Votes button
         if (this.seeVotesBtn) this.seeVotesBtn.addEventListener('click', () => this.togglePollsWindow());
+        */
 
     }
 
+    // Poll-related methods - HIDDEN
+    /*
     togglePollsWindow() {
         if (!this.pollsWindow) return;
         
@@ -628,6 +656,7 @@ class FizmatDiary {
         // Placeholder for poll response functionality
         this.showNotification('Poll response feature coming soon!', 'info');
     }
+    */
 
     bindEditDeleteButtons() {
         // Bind edit buttons
@@ -700,6 +729,12 @@ class FizmatDiary {
     }
 
     editHomework(homeworkId) {
+        // Check if user has permission to edit homework
+        if (!this.currentUser || this.currentUser.role !== 'teacher') {
+            this.showNotification('Only teachers can edit homework assignments.', 'warning');
+            return;
+        }
+        
         const homework = this.homework.find(h => h.id === homeworkId);
         if (!homework) return;
         
@@ -732,6 +767,12 @@ class FizmatDiary {
     }
 
     saveHomework() {
+        // Check if user has permission to save homework
+        if (!this.currentUser || this.currentUser.role !== 'teacher') {
+            this.showNotification('Only teachers can create or edit homework assignments.', 'warning');
+            return;
+        }
+        
         const title = this.homeworkTitle.value.trim();
         const content = this.homeworkContent.value.trim();
         const category = this.homeworkCategory.value;
@@ -973,18 +1014,23 @@ class FizmatDiary {
 
     // Accessibility Methods
     initializeAccessibility() {
-        // Load theme preference
+        // Load theme preference - DISABLED (Dark mode button removed)
+        /*
         const storedTheme = localStorage.getItem('fizmat-theme') || 'light';
         document.body.classList.toggle('theme-dark', storedTheme === 'dark');
         if (this.themeToggle) this.themeToggle.innerHTML = storedTheme === 'dark' ? '<i class="fas fa-sun" aria-hidden="true"></i> Bright Mode' : '<i class="fas fa-moon" aria-hidden="true"></i> Dark Mode';
+        */
     }
 
+    // toggleTheme() method removed - Dark mode button not working properly
+    /*
     toggleTheme() {
         const isDark = document.body.classList.toggle('theme-dark');
         localStorage.setItem('fizmat-theme', isDark ? 'dark' : 'light');
         if (this.themeToggle) this.themeToggle.innerHTML = isDark ? '<i class="fas fa-sun" aria-hidden="true"></i> Bright Mode' : '<i class="fas fa-moon" aria-hidden="true"></i> Dark Mode';
         this.announceToScreenReader(isDark ? 'Dark mode enabled' : 'Light mode enabled');
     }
+    */
 
     announceToScreenReader(message) {
         if (this.liveRegion) {
@@ -1174,14 +1220,9 @@ class FizmatDiary {
         this.updateHomeworkCount();
         this.updateCategoryCounts();
         this.updateUIForRole();
-        this.renderVotes();
-        // Show votes welcome for teachers, hide editor by default
-        if (this.votesWelcome) {
-            this.votesWelcome.style.display = (this.currentUser && this.currentUser.role === 'teacher') ? 'block' : 'none';
-        }
-        if (this.votesEditor) {
-            this.votesEditor.style.display = 'none';
-        }
+        // this.renderVotes(); // HIDDEN
+        // Show votes welcome for teachers, hide editor by default - HIDDEN
+        // Vote-related elements are hidden via CSS, no need to access them
         this.announceToScreenReader(`Welcome back, ${this.currentUser.name}`);
     }
 
@@ -1810,26 +1851,41 @@ class FizmatDiary {
 
     updateUIForRole() {
         const welcomeAddBtn = document.getElementById('welcomeAddBtn');
+        const homeworkEditor = document.getElementById('homeworkEditor');
         const isTeacher = this.currentUser && this.currentUser.role === 'teacher';
         
         if (this.currentUser.role === 'student') {
             // Hide add homework buttons for students
             if (welcomeAddBtn) welcomeAddBtn.style.display = 'none';
-            // Show polls window for students
+            
+            // Hide homework editor completely for students
+            if (homeworkEditor) homeworkEditor.style.display = 'none';
+            
+            // Show polls window for students - HIDDEN
+            /*
             if (this.pollsWindow) {
                 this.pollsWindow.style.display = 'block';
                 this.renderPollsWindow();
             }
             if (this.votesWelcome) this.votesWelcome.style.display = 'none';
             if (this.votesEditor) this.votesEditor.style.display = 'none';
+            */
         } else if (this.currentUser.role === 'teacher') {
             // Show add homework buttons for teachers
             if (welcomeAddBtn) welcomeAddBtn.style.display = 'flex';
-            // Show votes welcome for teachers
+            
+            // Show homework editor for teachers (if not already visible)
+            if (homeworkEditor && homeworkEditor.style.display !== 'block') {
+                homeworkEditor.style.display = 'none'; // Keep hidden until teacher clicks "Add Homework"
+            }
+            
+            // Show votes welcome for teachers - HIDDEN
+            /*
             if (this.votesWelcome) this.votesWelcome.style.display = 'block';
             if (this.votesEditor) this.votesEditor.style.display = 'none';
             // Hide polls window by default for teachers
             if (this.pollsWindow) this.pollsWindow.style.display = 'none';
+            */
         }
     }
 
@@ -1912,19 +1968,24 @@ class FizmatDiary {
             <div class="homework-item-preview">${this.escapeHtml(homework.content.substring(0, 100))}${homework.content.length > 100 ? '...' : ''}</div>
             <div class="homework-item-date">${this.formatDate(new Date(homework.date))}</div>
             <div class="homework-item-actions">
-                <button class="btn btn-outline edit-button" data-homework-id="${homework.id}" aria-label="Edit homework: ${this.escapeHtml(homework.title)}">
-                    <i class="fas fa-edit" aria-hidden="true"></i>
-                </button>
-                <button class="btn btn-danger delete-button" data-homework-id="${homework.id}" aria-label="Delete homework: ${this.escapeHtml(homework.title)}">
-                    <i class="fas fa-trash" aria-hidden="true"></i>
-                </button>
+                ${this.currentUser && this.currentUser.role === 'teacher' ? `
+                    <button class="btn btn-outline edit-button" data-homework-id="${homework.id}" aria-label="Edit homework: ${this.escapeHtml(homework.title)}">
+                        <i class="fas fa-edit" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-danger delete-button" data-homework-id="${homework.id}" aria-label="Delete homework: ${this.escapeHtml(homework.title)}">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                    </button>
+                ` : `
+                    <span class="view-only-indicator">View Only</span>
+                `}
             </div>
         `;
         
         // Keyboard navigation for homework items
         div.addEventListener('keydown', (e) => {
-            // Only prevent default if not in a text input
-            if ((e.key === 'Enter' || e.key === ' ') && 
+            // Only allow editing for teachers
+            if (this.currentUser && this.currentUser.role === 'teacher' && 
+                (e.key === 'Enter' || e.key === ' ') && 
                 e.target.tagName !== 'TEXTAREA' && 
                 e.target.tagName !== 'INPUT' && 
                 e.target.contentEditable !== 'true') {
@@ -1934,7 +1995,9 @@ class FizmatDiary {
         });
         
         div.addEventListener('click', (e) => {
-            if (!e.target.closest('.homework-item-actions')) {
+            // Only allow editing for teachers
+            if (this.currentUser && this.currentUser.role === 'teacher' && 
+                !e.target.closest('.homework-item-actions')) {
                 this.editHomework(homework.id);
             }
         });
@@ -2203,13 +2266,9 @@ class FizmatDiary {
         
         // Re-render homework list
         this.renderHomework();
-        this.renderVotes();
-        if (this.votesWelcome) {
-            this.votesWelcome.style.display = (this.currentUser && this.currentUser.role === 'teacher') ? 'block' : 'none';
-        }
-        if (this.votesEditor) {
-            this.votesEditor.style.display = 'none';
-        }
+        // this.renderVotes(); // HIDDEN
+        // Vote-related UI updates - HIDDEN
+        // Vote-related elements are hidden via CSS, no need to access them
         
         this.announceToScreenReader(`Switched to ${category} class. Subjects grid is now visible.`);
     }
@@ -2253,6 +2312,12 @@ class FizmatDiary {
     }
 
     deleteHomework(homeworkId) {
+        // Check if user has permission to delete homework
+        if (!this.currentUser || this.currentUser.role !== 'teacher') {
+            this.showNotification('Only teachers can delete homework assignments.', 'warning');
+            return;
+        }
+        
         this.showConfirmModal(
             'Delete Homework',
             'Are you sure you want to delete this homework assignment? This action cannot be undone.',

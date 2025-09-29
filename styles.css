@@ -1,4 +1,5 @@
-/* Polls Window */
+/* Polls Window - HIDDEN */
+/*
 .polls-window {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -194,6 +195,7 @@
     border-radius: 8px;
     background: #f8fafc;
 }
+*/
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -217,8 +219,8 @@ body.theme-dark {
 
 body.theme-dark .sidebar,
 body.theme-dark .content,
-body.theme-dark .votes-sidebar,
-body.theme-dark .votes-editor,
+/* body.theme-dark .votes-sidebar, */ /* HIDDEN */
+/* body.theme-dark .votes-editor, */ /* HIDDEN */
 body.theme-dark #extraInfoWindow.scroll-window,
 body.theme-dark .modal .modal-content {
     background: #111827;
@@ -893,7 +895,7 @@ body.reduced-motion .btn:hover {
     border-radius: 12px;
     padding: 1rem;
     width: 100%;
-    max-width: none; /* match votes editor width */
+    max-width: none; /* match votes editor width - HIDDEN */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -1683,6 +1685,7 @@ body.reduced-motion .btn:hover {
     color: #1e293b;
     outline: none;
     padding: 0.5rem 0;
+    margin-left: 1rem; /* Add space between subject selector and title */
 }
 
 .title-input::placeholder {
@@ -2597,4 +2600,15 @@ body.reduced-motion .btn:hover {
 
 .file-tag i {
     font-size: 0.625rem;
+}
+
+/* Student View-Only Indicator */
+.view-only-indicator {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-style: italic;
+    padding: 0.25rem 0.5rem;
+    background: #f3f4f6;
+    border-radius: 0.25rem;
+    border: 1px solid #e5e7eb;
 }
