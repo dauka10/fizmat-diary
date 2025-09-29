@@ -218,7 +218,7 @@
                 </div>
 
                 <!-- Votes (below homework and classes) -->
-                <div class="votes-sidebar" id="votesSidebar" aria-label="Votes" style="margin-top: 1rem;">
+                <div class="votes-sidebar" id="votesSidebar" aria-label="Votes" style="margin-top: 1rem; display: none;">
                     <div class="votes-header">
                         <h2>Votes</h2>
                         <div class="votes-count" id="votesCount" aria-live="polite">0 votes</div>
@@ -244,7 +244,7 @@
                 </div>
 
                 <!-- Polls Window for Students -->
-                <div id="pollsWindow" class="polls-window" style="display: none;">
+                <div id="pollsWindow" class="polls-window" style="display: none !important;">
                     <div class="polls-header">
                         <h3>Recent Polls</h3>
                         <div class="polls-actions">
@@ -432,7 +432,7 @@
                 </div>
 
                 <!-- Votes welcome card (teacher) -->
-                <div class="votes-welcome" id="votesWelcome" style="display: none;">
+                <div class="votes-welcome" id="votesWelcome" style="display: none !important;">
                     <div class="welcome-content">
                         <i class="fas fa-poll" aria-hidden="true"></i>
                         <h2>Create a Class Poll</h2>
@@ -451,7 +451,7 @@
                 </div>
 
                 <!-- Votes editor (right pane similar to homework editor) -->
-                <div class="votes-editor" id="votesEditor" aria-label="Create or edit vote" style="margin-top: 1rem;">
+                <div class="votes-editor" id="votesEditor" aria-label="Create or edit vote" style="margin-top: 1rem; display: none !important;">
                     <div class="editor-header">
                         <label for="voteTopic" class="sr-only">Vote topic</label>
                         <input type="text" id="voteTopic" placeholder="   Topic..." class="title-input" aria-label="Vote topic">
@@ -700,13 +700,7 @@
         </div>
     </div>
 
-    <!-- Theme controls -->
-    <div class="accessibility-controls" role="region" aria-label="Theme options">
-        <button id="themeToggle" class="btn btn-outline" aria-label="Toggle dark mode">
-            <i class="fas fa-moon" aria-hidden="true"></i>
-            Dark Mode
-        </button>
-    </div>
+    <!-- Theme controls - REMOVED (Dark mode button not working properly) -->
 
     
 
